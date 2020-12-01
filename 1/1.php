@@ -16,18 +16,21 @@
     fclose($input);
 
     //part1
-    /*
+    echo "p1:\n";
     for ($xcount = 0; $xcount< $inputcount-1; $xcount+=1){
         for ($ycount = 1; $ycount < $inputcount; $ycount +=1){
             if ($inputarr[$xcount]+$inputarr[$ycount]==2020)
             {
-                echo $inputarr[$xcount]*$inputarr[$ycount];
-                die();
+                echo "sumxy: ". $inputarr[$xcount]*$inputarr[$ycount]."\n";
+                $xcount=$inputcount;
+                $ycount=$inputcount;
             }
         }
-    }*/
+    }
+    
 
     //part2
+    echo "p2\n";
     for ($xcount = 0; $xcount< $inputcount-2; $xcount+=1){
         for ($ycount = 1; $ycount < $inputcount-1; $ycount +=1){
             for ($zcount = 2; $zcount < $inputcount; $zcount +=1){
@@ -35,7 +38,9 @@
                 {
                     echo "x: ".$inputarr[$xcount]." y:".$inputarr[$ycount]." z:".$inputarr[$zcount]."\n";
                     echo "multiply: " .$inputarr[$xcount]*$inputarr[$ycount]*$inputarr[$zcount];
-                    die();
+                    $xcount=$inputcount;
+                    $ycount=$inputcount;
+                    $zcount=$inputcount;
                 }
             }
         }
