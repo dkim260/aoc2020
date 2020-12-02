@@ -19,7 +19,18 @@
     }
 
     function verify2 ($index1, $index2, $rule, $line){
-        return (strcmp($line[$index1-1], $rule)==0 || strcmp ($line[$index2-1], $rule)==0);
+        if (strcmp($line[$index1-1], $rule)==0 && strcmp ($line[$index2-1], $rule)==0)
+        {
+            return false;
+        }
+        else if (strcmp($line[$index1-1], $rule)==0 || strcmp ($line[$index2-1], $rule)==0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 
@@ -73,9 +84,4 @@
 
     fclose($parse);
     echo $counttrue;
-
-
-    
-
-
 ?>
