@@ -33,19 +33,6 @@
 
             return $checkbyr && $checkiyr && $checkeyr && $checkhgt && $checkhcl && $checkecl && $checkpid;
         }
-        public function verifyDebug () {
-            $checkbyr = ($this->byr <=2002) && ($this->byr>=1920);
-            $checkiyr = ($this->iyr <=2020) && ($this->iyr>=2010);
-            $checkeyr = ($this->eyr <=2030) && ($this->eyr>=2020);
-            $checkhgt = ($this->verifyHeight($this->hgt));
-
-            $checkhcl = (preg_match("/#[0-9a-f]{6}/", $this->hcl)==1);
-            $checkecl = ($this->verifyEcl($this->ecl));
-            $checkpid = ($this->verifyPid ($this->pid));
-
-            //fprintf ("byr: %s iyr: %s eyr: %s hgt: %s hcl: %s ecl: %s pid: %s\n", $checkbyr, $checkiyr, $checkeyr, $checkhgt, $checkhcl, $checkecl, $checkpid);
-            return "debug:". " byr: ". $checkbyr . " iyr: " . $checkiyr             . " eyr: " . $checkeyr            . " hgt: " . $checkhgt            . " hcl: " . $checkhcl             . " ecl: " . $checkecl            . " pid: " .  $checkpid . "\n";
-        }
         public function verifyEcl ($input){
             $count = 0;
             if (strcmp($input, "amb") == 0){
@@ -98,7 +85,7 @@
             }
         }
         public function verifyPid ($input) : bool { //There was an issue with verifying Pid?
-            if (preg_match ("/[0-9]{9}/",$input)==1)
+            if (preg_match ("/^[0-9]{9}$/",$input)==1)
             {
                 return true;
             }
@@ -138,30 +125,25 @@
     }
 
     $parse = fopen("input.txt", "r");
-    $counter = 0;
-
-    $validnaiive=0;
-    $validusers=0;
 
     $numofusers=0;
-
-    $pass = fopen ("pass.txt", "w");
-    $fail = fopen ("fail.txt", "w");
-    $other = fopen ("other.txt", "w");
+    $validusers=0;
+    $counter = 0;
 
     while (!feof($parse)){
-
         $line = fgets($parse);//fgets parses 1 line in full
 
         $user = array ();//start a user
         $user1 = new user();//user class
         $numofusers+=1;
 
-        while (strcmp ($line, "\n")!=0 && $line!=false){//ran into an infinite loop for the last person because formatting
-            $args = preg_split("[ ]\n", $line);
+                                //Did something go wrong here?
+        while ($line!=false && strcmp($line[1],"\n")!=0){
+            $args = preg_split("[ ]", $line);
             foreach ($args as $arg){
                 array_push($user, $arg);
             }
+            $counter+=1;
             $line = fgets($parse);
         }
 
@@ -172,38 +154,11 @@
         }
 
         if ($user1->naiiveVerify()==true){
-            $validnaiive+=1;
-
             if ($user1->verifyUser() == true){
-                fwrite($pass, $user1->toString());
                 $validusers+=1;
             }
-            else
-            {
-                fwrite($fail, $user1->verifyDebug());
-                fwrite($fail, $user1->toString());
-                // var_dump($user1);
-                // $user1->verifyDebug();
-            }
         }
-        else{
-            fwrite($other, $user1->verifyDebug());
-            fwrite($other, $user1->toString());
-        }
-        //var_dump($user1); //something weird happens here -- two users are in one variable for some reason? If you unset $user1 then it's fine. Side effect?
-
-        unset($user);
-        unset($usersfields);
-        unset($user1); 
-        
-        $counter+=1;
     }
-    fclose($pass);
-    fclose($fail);
-    fclose($other);
-
+    echo $validusers;
     fclose($parse);
-    echo "\nnaiive: ".  $validnaiive;
-    echo "\nValid: " . $validusers;
-    echo "\nnumofusers: " . $numofusers;
 ?>
