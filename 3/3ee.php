@@ -1,6 +1,4 @@
 <?php
-
-    //This was attempt like 16+ or something, I was hitting 15 minute timeout.
     $parse = fopen("input.txt", "r");
 
     //There are exactly 31 characters in each line.
