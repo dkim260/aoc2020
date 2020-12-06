@@ -69,7 +69,7 @@
         public $column = -1;
         public $seatID = -1;
     }
-    function sortTicketsByID (&$tickets) {
+    function sortTicketsByID (&$tickets) { //Taught me about edge case for bubble sort 
         for ($x=0; $x<count($tickets); $x+=1){
             for ($y=1; $y<count($tickets); $y+=1){
                 if ($tickets[$x]->seatID<=$tickets[$y]->seatID){
@@ -80,20 +80,81 @@
             }
         }
     }
-
-    function findSelfID ($tickets){
+    function findSelfID ($tickets){//Incorrect
         for ($x=1; $x<count($tickets)-1; $x+=1){
-            if ($tickets[$x]->seatID==(($tickets[$x-1]->seatID)-1) 
-
-            && $tickets[$x]->seatID==(($tickets[$x+1]->seatID)+1)){
-                echo $tickets[$x];
+            if ($tickets[$x]->seatID==(($tickets[$x-1]->seatID)-1) && $tickets[$x]->seatID==(($tickets[$x+1]->seatID)+1)){
+                echo "row: ";
+                echo $tickets[$x]->row;
+                echo " column: ";
+                echo $tickets[$x]->column;
+                echo " seatID: ";
+                echo $tickets[$x]->seatID;
+                echo "\n";
             }
+        }
+    }
+    //Ticket ID somewhere between range of 510 and 615, 563 is incorrect
+    function findSelfID2 ($tickets){
+        for ($x=0; $x<count($tickets); $x+=1){
+            if ($tickets[$x]->seatID > 510 && $tickets[$x]->seatID<615){
+                echo "row: ";
+                echo $tickets[$x]->row;
+                echo " column: ";
+                echo $tickets[$x]->column;
+                echo " seatID: ";
+                echo $tickets[$x]->seatID;
+                echo "\n";
+            }
+        }
+    }
+    //Ticket ID somewhere between range of 510 and 615, 563 is incorrect
+    function findSelfID3 ($tickets){
+        for ($x=0; $x<count($tickets); $x+=1){
+            if ($tickets[$x]->seatID > 510 && $tickets[$x]->seatID<615){
+                if ($tickets[$x]->seatID==(($tickets[$x-1]->seatID)-1) && $tickets[$x]->seatID==(($tickets[$x+1]->seatID)+1)){
+                    echo "row: ";
+                    echo $tickets[$x]->row;
+                    echo " column: ";
+                    echo $tickets[$x]->column;
+                    echo " seatID: ";
+                    echo $tickets[$x]->seatID;
+                    echo "\n";
+                }
+            }
+        }
+    }
+    function findSelfID4 ($tickets){//cheesed, looked for the missing number
+        for ($x=0; $x<count($tickets); $x+=1){
+            if ($tickets[$x]->seatID > 605 && $tickets[$x]->seatID<615){
+                echo "row: ";
+                echo $tickets[$x]->row;
+                echo " column: ";
+                echo $tickets[$x]->column;
+                echo " seatID: ";
+                echo $tickets[$x]->seatID;
+                echo "\n";
+            }
+        }
+    }
+
+    function findSelfIDProper ($tickets){
+        $behind=$tickets[0];
+        for ($x=1; $x<count($tickets); $x+=1){
+            if ( ( $tickets[$x]->seatID - $behind->seatID) != 1)
+            {
+                echo "above: ";
+                var_dump($tickets[$x]);
+                echo "below: ";
+                var_dump($behind);
+            }
+            $behind=$tickets[$x];
         }
     }
 
     $parse = fopen ("inputs.txt", "r");
 
     $max = -1;
+    $min = 999;
 
     $tickets = array ();
     
@@ -108,6 +169,9 @@
         if ($max<=$ticket->seatID){
             $max=$ticket->seatID;
         }
+        if ($min>=$ticket->seatID){
+            $min=$ticket->seatID;
+        }
 
         array_push($tickets, $ticket);
         $read = fgets($parse);
@@ -115,6 +179,14 @@
 
     sortTicketsByID($tickets);
 
-    findSelfID($tickets);
+    //findSelfIDProper($tickets);
+    echo "min: " . $min . " max: " . $max . "\n";
+    echo "size: ". count($tickets);
+
+    echo "\n0: ";
+    var_dump($tickets[0]);
+    echo "end: ";
+    var_dump($tickets[count($tickets)-1]);
+
     fclose($parse);
 ?>
