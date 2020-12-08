@@ -30,7 +30,7 @@
 
     $carriage = array(); //Contains all bags
 
-    $parse = fopen("inputs.txt", "r");
+    $parse = fopen("input.txt", "r");
     while (!feof($parse)){
         $line = fgets($parse);
         $bagRule = new bag;
@@ -85,49 +85,58 @@
             }
         }
     }
-
-    var_dump($ambiguousBags);
-
-    function lookupByNode (&$array, $node){//Get an array, return the entry that has the node color
-        $color = $node->color;
-        for ($x = 0; $x< count($array); $x+=1){
-            if ($array[$x]==$color){
+    // var_dump($hasGoldBag);
+    // var_dump($hasNoBag);
+    // var_dump($ambiguousBags);
+    function getEntry (&$array, $search){//Look at array, and get the entry for search=another entry
+        for ($x=0; $x<count($array); $x+=1){
+            if($array[$x]->color==$search->color)
+            {
                 return $array[$x];
             }
         }
     }
-
-    var_dump(lookupByNode ($carriage, $ambiguousBags[0]));
-
-    /*
-    function linearAppend (&$bag){//take in a bag rule
-        global $hasGoldBag;
-        global $hasNoBag;
-        global $ambiguousBags;
-        while (count($bag->otherBags)!=0){
-            $otherBagChild = array_shift($bag->otherBags);
-
-            if (linearSearch($hasGoldBag, $otherBagChild->color)){ //Found a gold bag
-                echo "1 ";
+    // var_dump($ambiguousBags);
+    // $var = $ambiguousBags[2]->otherBags; //2->1 child is vibrant plum
+    // $vartest = $ambiguousBags[4]; //4 -- vibrantplum
+    // var_dump(getEntry($var, $vartest));
+    function removeEntry (&$array, $search){
+        for ($x=0; $x<count($array); $x+=1){
+            if($array[$x]->color==$search->color)
+            {
+                unset($array[$x]);
             }
-            else if (linearSearch($hasNoBag, $otherBagChild->color)){ //Found no bag
-                echo "0 ";
+        }
+
+    }
+    //gold bags is considered ambiguous, remove it
+    removeEntry($ambiguousBags, $goldBag);
+    $ambiguousBags=array_values($ambiguousBags);
+
+    function modifySelf ($array){
+        global $hasGoldBag;
+        global $ambiguousBags;
+        global $hasNoBag;
+
+        foreach ($array as $entry){
+            echo "childcolor: " . $entry->color . ": contains: ";
+            if (getEntry($hasGoldBag, $entry)!=null){ //The color contains a gold bag
+                echo "Gold bag ";
+            }
+            else if (getEntry($hasNoBag, $entry)!=null){ //The color contains no bag
+                echo "No bag ";
             }
             else
             {
-                var_dump(lookupByNode($ambiguousBags,$otherBagChild));
-                return;
-                //array_unshift($bag->otherBags, lookupByNode($ambiguousBags,$otherBagChild));
-                linearAppend($otherBagChild); //If this keeps looping, something went wrong.
+                array_push($entry->otherBags , (getEntry($ambiguousBags, $entry))   ); //
+                modifySelf($entry->otherBags);
             }
         }
-        echo "\n";
     }
 
     foreach ($ambiguousBags as $bag){
-        $results = array();
-        linearAppend ($bag, $results);
-        //echo $results . "\n";
-    }*/
+        echo "\nambiguous entry color: " . $bag->color . "\n";
+        modifySelf ($bag->otherBags);
+    }
 
 ?>

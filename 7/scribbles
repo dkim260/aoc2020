@@ -1,0 +1,232 @@
+PS F:\_scribbles\aoc2020\7> php 7.php
+
+does contain:
+array(2) {
+  [0]=>
+  object(bag)#8 (3) {       
+    ["color"]=>
+    string(11) "brightwhite"
+    ["holds"]=>
+    int(1)
+    ["otherBags"]=>
+    array(1) {
+      [0]=>
+      object(bag)#9 (3) {
+        ["color"]=>
+        string(9) "shinygold"
+        ["holds"]=>
+        int(1)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+    }
+  }
+  [1]=>
+  object(bag)#10 (3) {
+    ["color"]=>
+    string(11) "mutedyellow"
+    ["holds"]=>
+    int(1)
+    ["otherBags"]=>
+    array(2) {
+      [0]=>
+      object(bag)#11 (3) {
+        ["color"]=>
+        string(9) "shinygold"
+        ["holds"]=>
+        int(2)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+      [1]=>
+      object(bag)#12 (3) {
+        ["color"]=>
+        string(9) "fadedblue"
+        ["holds"]=>
+        int(9)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+    }
+  }
+}
+doesn't contain:
+array(2) {
+  [0]=>
+  object(bag)#22 (3) {
+    ["color"]=>
+    string(9) "fadedblue"
+    ["holds"]=>
+    int(0)
+    ["otherBags"]=>
+    array(0) {
+    }
+  }
+  [1]=>
+  object(bag)#23 (3) {
+    ["color"]=>
+    string(11) "dottedblack"
+    ["holds"]=>
+    int(0)
+    ["otherBags"]=>
+    array(0) {
+    }
+  }
+}
+
+ambiguous:
+array(5) {
+  [0]=>
+  object(bag)#2 (3) {
+    ["color"]=>
+    string(8) "lightred"
+    ["holds"]=>
+    int(1)
+    ["otherBags"]=>
+    array(2) {
+      [0]=>
+      object(bag)#3 (3) {
+        ["color"]=>
+        string(11) "brightwhite"
+        ["holds"]=>
+        int(1)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+      [1]=>
+      object(bag)#4 (3) {
+        ["color"]=>
+        string(11) "mutedyellow"
+        ["holds"]=>
+        int(2)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+    }
+  }
+  [1]=>
+  object(bag)#5 (3) {
+    ["color"]=>
+    string(10) "darkorange"
+    ["holds"]=>
+    int(1)
+    ["otherBags"]=>
+    array(2) {
+      [0]=>
+      object(bag)#6 (3) {
+        ["color"]=>
+        string(11) "brightwhite"
+        ["holds"]=>
+        int(3)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+      [1]=>
+      object(bag)#7 (3) {
+        ["color"]=>
+        string(11) "mutedyellow"
+        ["holds"]=>
+        int(4)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+    }
+  }
+  [2]=>
+  object(bag)#13 (3) {
+    ["color"]=>
+    string(9) "shinygold"
+    ["holds"]=>
+    int(1)
+    ["otherBags"]=>
+    array(2) {
+      [0]=>
+      object(bag)#14 (3) {
+        ["color"]=>
+        string(9) "darkolive"
+        ["holds"]=>
+        int(1)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+      [1]=>
+      object(bag)#15 (3) {
+        ["color"]=>
+        string(11) "vibrantplum"
+        ["holds"]=>
+        int(2)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+    }
+  }
+  [3]=>
+  object(bag)#16 (3) {
+    ["color"]=>
+    string(9) "darkolive"
+    ["holds"]=>
+    int(1)
+    ["otherBags"]=>
+    array(2) {
+      [0]=>
+      object(bag)#17 (3) {
+        ["color"]=>
+        string(9) "fadedblue"
+        ["holds"]=>
+        int(3)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+      [1]=>
+      object(bag)#18 (3) {
+        ["color"]=>
+        string(11) "dottedblack"
+        ["holds"]=>
+        int(4)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+    }
+  }
+  [4]=>
+  object(bag)#19 (3) {
+    ["color"]=>
+    string(11) "vibrantplum"
+    ["holds"]=>
+    int(1)
+    ["otherBags"]=>
+    array(2) {
+      [0]=>
+      object(bag)#20 (3) {
+        ["color"]=>
+        string(9) "fadedblue"
+        ["holds"]=>
+        int(5)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+      [1]=>
+      object(bag)#21 (3) {
+        ["color"]=>
+        string(11) "dottedblack"
+        ["holds"]=>
+        int(6)
+        ["otherBags"]=>
+        array(0) {
+        }
+      }
+    }
+  }
+}
