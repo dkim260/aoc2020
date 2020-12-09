@@ -33,6 +33,7 @@
         for ($x=0; $x<count($queue); $x++){
             $sum+=$queue->offsetGet($x);
         }
+        return $sum;
     }
 
     function contigSum ($data, $workingdata, $goal){ //Think this one through more
@@ -42,9 +43,21 @@
         }
 
         else{
-            $workingdata->enqueue($data->dequeue());
-            contigSum($data, $workingdata, $goal);
-            return;
+            if ($data->isEmpty()){
+                echo "Empty";
+                die();
+            }
+            else
+            {
+                $workingdata->enqueue($data->dequeue());
+                foreach ($data as $entry){
+                    $workingdata->enqueue($entry);
+                    contigSum($data, $workingdata, $goal);
+                }               
+                printf("Sum: %d\n", queueSum($workingdata)); 
+                echo "failed\n";
+                return;
+            }
         }
     }
 
