@@ -28,6 +28,26 @@
         return $max-$min;
     }
 
+    function queueSum ($queue){
+        $sum=0;
+        for ($x=0; $x<count($queue); $x++){
+            $sum+=$queue->offsetGet($x);
+        }
+    }
+
+    function contigSum ($data, $workingdata, $goal){ //Think this one through more
+        if (queueSum($workingdata)==$goal){
+            var_dump($workingdata);
+            return;
+        }
+
+        else{
+            $workingdata->enqueue($data->dequeue());
+            contigSum($data, $workingdata, $goal);
+            return;
+        }
+    }
+
     $parse = fopen("inputs.txt", "r");
     $rotator = new SplQueue;
     while (!feof($parse)){
@@ -41,17 +61,27 @@
         $checker->enqueue($rotator->dequeue());
     }
     $checker->enqueue($rotator->dequeue());
-
     while (!$rotator->isEmpty()){
         if(bubblecheck($checker)==false){
-            echo $checker->top();
+            $error=$checker->top();
         }
         $checker->dequeue();
         $checker->enqueue($rotator->dequeue());
     }
     
     //part2:
-    //must find a contiguous set of at least two numbers where the sum=50047984
+    //must find a contiguous set of at least two numbers where the sum=50047984, for inputs.txt=127
 
-    
+    $parse = fopen("inputs.txt", "r");
+    $rotator = new SplQueue;
+    while (!feof($parse)){
+        $input = (int)fgets($parse);
+        $rotator->enqueue($input);
+    }
+    fclose($parse);
+
+    //$error=127, 50047984
+    $check = new SplQueue;
+    contigSum($rotator, $check, $error);
+
 ?>
