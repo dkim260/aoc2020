@@ -6,13 +6,26 @@
         public $value;
         public $visited=false;
     }
+    function cloneDLL ($dll){
+        $clonedll = new SplDoublyLinkedList();
+        $dll->rewind();
+        for ($x=0; $x<$dll->count(); $x++){
+            $clonenode = clone $dll->current();
+            $clonedll->push($clonenode);
+            $dll->next();
+        }
+        $clonedll->rewind();
+        return $clonedll;
+    }
 
-    function run (&$insts, &$iterator, &$acc) {
+    function run ($insts, $iterator, &$acc) {
         while ($insts->valid()!=null){
+            //var_dump($iterator);
+
             //if it's a jump and it's already been visited, return null for now
             if ($iterator->command=="jmp"){
                 if ($iterator->visited==true){
-                    return;
+                    return false;
                 }
                 $newnode = $iterator;
                 $newnode->visited=true;
@@ -37,8 +50,7 @@
             }
             else if ($iterator->command=="acc"){
                 if ($iterator->visited==true){
-                    echo "ping";
-                    return;
+                    return false;
                 }
     
                 $acc+=$iterator->value;
@@ -53,36 +65,7 @@
             }
             else{//NOP
                 if ($iterator->visited==true){
-                    if ($iterator->value!=0){
-                        $newnode = $iterator;
-                        $iterator->command="jmp";
-                        $newnode->visited=false;
-                        $index=$insts->key();
-                        $insts->offsetSet($index, $newnode);
-
-                        //Refresh the list.
-                        $insts->rewind();
-                        $iterator = $insts->current();
-                        while ($insts->valid()!=null){
-                            $iterator->visited=false;
-                            $insts->next();
-                        }
-                        $acc=0;
-                    
-                        //Rerun it again
-                        $insts->rewind();
-                        $iterator = $insts->current();
-
-                        run($insts, $iterator, $acc);
-
-                        //It didn't work.
-                        echo "failed";
-                        return;
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    return false;
                 }
                 $newnode = $iterator;
                 $newnode->visited=true;
@@ -94,10 +77,10 @@
             }
         }
 
-        return $acc; //it worked
+        return true; //got to the end of instructions
     }
 
-    $parse = fopen("inputs.txt", "r");    
+    $parse = fopen("input.txt", "r");    
     $line = fgets($parse);
     //Learning something new each day :)
     $insts = new SplDoublyLinkedList;
@@ -143,7 +126,46 @@
     $iterator = $insts->current();
 
     //Part 2: Have to either change a single NOP <-> JMP statement to end the program.
-    echo run($insts, $iterator, $acc);
+    $acc=0;
+    $insts->rewind();
+    $iterator = $insts->current();
 
+    //Change jmps to nops
+    while ($insts->valid()!=false){
+        if ($iterator->command=="jmp"){
+            //$instscopy = clone $insts; 
+            //This doesn't create an entire copy, of the linkedlist, and what ends up happening is that 
+            //the references still point to the original nodes
+
+            $wherejmp = $insts->key();
+            $instscopy = cloneDLL($insts); //Made my own
+
+            $insts->rewind();
+            for($x=0;$x<$wherejmp;$x++){
+                $insts->next();
+            }
+            for($x=0;$x<$wherejmp;$x++){
+                $instscopy->next();
+            }
+            $instscopy->key();
+            $iterator = $instscopy->current();
+            $iterator->command="nop";
+            $instscopy->offsetSet($instscopy->key(),$iterator);
+
+            $instscopy->rewind();
+            $iterator = $instscopy->current();
+            $acc=0;
+
+            if (run($instscopy, $iterator, $acc)==true){
+                echo $acc;
+            }
+        }
+
+        //Move to the next nop
+        $insts->next();
+        $iterator = $insts->current();
+        $acc=0;
+    }
+    //THANKFULLY JUST HAD TO CHANGE JMP TO NOP
 
 ?>

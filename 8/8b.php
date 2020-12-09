@@ -1,5 +1,4 @@
 <?php
-
     class instruction {
         public $command;
         public $plusmin;
@@ -12,6 +11,27 @@
             //if it's a jump and it's already been visited, return null for now
             if ($iterator->command=="jmp"){
                 if ($iterator->visited==true){
+
+                    $newnode = $iterator;
+                    $iterator->command="nop";
+                    $newnode->visited=false;                    
+                    $index=$insts->key();
+                    $insts->offsetSet($index, $newnode);
+
+                    //Refresh the list.
+                    $insts->rewind();
+                    $iterator = $insts->current();
+                    while ($insts->valid()!=null){
+                        $iterator->visited=false;
+                        $insts->next();
+                    }
+                    $acc=0;
+                
+                    //Rerun it again
+                    $insts->rewind();
+                    $iterator = $insts->current();
+
+                    //It didn't work.
                     return;
                 }
                 $newnode = $iterator;
@@ -37,7 +57,6 @@
             }
             else if ($iterator->command=="acc"){
                 if ($iterator->visited==true){
-                    echo "ping";
                     return;
                 }
     
@@ -53,36 +72,7 @@
             }
             else{//NOP
                 if ($iterator->visited==true){
-                    if ($iterator->value!=0){
-                        $newnode = $iterator;
-                        $iterator->command="jmp";
-                        $newnode->visited=false;
-                        $index=$insts->key();
-                        $insts->offsetSet($index, $newnode);
-
-                        //Refresh the list.
-                        $insts->rewind();
-                        $iterator = $insts->current();
-                        while ($insts->valid()!=null){
-                            $iterator->visited=false;
-                            $insts->next();
-                        }
-                        $acc=0;
-                    
-                        //Rerun it again
-                        $insts->rewind();
-                        $iterator = $insts->current();
-
-                        run($insts, $iterator, $acc);
-
-                        //It didn't work.
-                        echo "failed";
-                        return;
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    return;
                 }
                 $newnode = $iterator;
                 $newnode->visited=true;
@@ -93,11 +83,10 @@
                 $iterator = $insts->current();        
             }
         }
-
-        return $acc; //it worked
+        return $acc;
     }
 
-    $parse = fopen("inputs.txt", "r");    
+    $parse = fopen("input.txt", "r");    
     $line = fgets($parse);
     //Learning something new each day :)
     $insts = new SplDoublyLinkedList;
@@ -137,6 +126,8 @@
         $line = fgets($parse);
     }
     fclose($parse);
+
+
 
     $acc=0;
     $insts->rewind();
