@@ -111,9 +111,9 @@
     //Each entry will grow 1, 2, 3, 4
     //Think of it as
     //1
-    //1 1 
-    //1 1 1
-    //1 1 1 1
+    //3 2 
+    //6 5 3
+    //10 9 7 4
     //Each row uses previous rows entries
     array_push($rotator->offsetGet(0)->valuesArray,($rotator->offsetGet(0)->value));
 
