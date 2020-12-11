@@ -14,6 +14,8 @@
 
     class charger {
         public $jolts;
+        public $holds=0;
+        //Counts how many chargers fit it
         public $chargersthatfit = array(); //Will hold references to other chargers **** at most 3
 
         function addSubCharger (&$subcharger) {//Input of type charger
@@ -26,6 +28,7 @@
                 return;
             }
             else{
+                $this->holds+=1;
                 array_push($this->chargersthatfit, $subcharger);
             }
         }
@@ -65,6 +68,26 @@
         foreach ($node->chargersthatfit as $charger){
             generator($charger, $counter, $max);
         }
+    }
+
+    //Another attempt...
+    //Modified to chargers to show how many it holds explicitly
+
+    //the last node / the phone charger should hold how many references lead to it.
+    function generator2 ($node, $data, $max){
+        if ($node->jolts==0){
+            
+        }
+        else if ($node->jolts!=$max){
+            for ($x=0; $x<count($node->chargersthatfit); $x++){
+                //$node->chargersthatfit[$x]->holds*=;
+            }
+        }
+        else//($node->jolts==$max)
+        {
+            echo $node->holds;
+        }
+
     }
 
     //Subreddit mentioned memoization and my memory of it from uni is hazy.
@@ -116,16 +139,16 @@
     $counter=1;
     //generator($data[0], $counter, $phone->jolts);
 
+    //Attempt
     /*
-    for ($x=0; $x<count($data); $x++){
-        if (count($data[$x]->chargersthatfit)>=1){
-            $counter*=count($data[$x]->chargersthatfit);
-        }
-        else{
-            $counter*=1;
-        }
-    }*/
+    for ($x=0; $x<count($data)-1; $x++){
+        $counter*=count($data[$x]->chargersthatfit);
+    }
 
+    echo $counter ."\n";
+    */
+
+    //$counter=1;
     //root
     //we know how many elements there are in its sub array
     //skip that many in a loop
@@ -140,6 +163,8 @@
                //branch                   \
     //Start->   branch                         ->End
     //         \\branch
+
+    /*
     $index=0;
     while ($index<count($data)-1){
         $tempcount=0;
@@ -149,6 +174,11 @@
         $index+=$tempcount;
         $counter*=$tempcount;
     }
-    echo $counter;
+    echo $counter;*/
+
+    //echo generator2($data[0], $data, $data[count($data)-1]);
+
+    echo $data[count($data)-1];
+
 
 ?>
