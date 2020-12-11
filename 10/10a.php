@@ -12,81 +12,68 @@
         }
     }
 
-    //Chargers must be sorted
-    function setReferencesAndDistances (&$chargers){
-        for ($x=1; $x<count($chargers); $x++){
-            $chargers[$x]->distanceToPrev=$chargers[$x]->jolts-$chargers[$x-1]->jolts;
-            $chargers[$x]->prev=&$chargers[$x-1];
-        }
-    }
-
-    //Will return an array containing the Key: jolt differences -> Value: # of chargers with jolt difference
-    function bucketCount ($chargers){
-        $bucket = array(1=>0,2=>0,3=>0);
-
-        for ($x=1; $x<count($chargers); $x++){
-            $index = $chargers[$x]->distanceToPrev;
-            $bucket[$index]+=1;
-        }
-
-        return $bucket;
-    }
-
     class charger {
         public $jolts;
-        public $distanceToPrev;
-        public $prev;
-    }
+        public $chargersthatfit = array(); //Will hold references to other chargers **** at most 3
 
-    function dll($array){
-        $arr = array();
-        foreach ($array as $element){
-            array_push($arr, $element);
-        }
-        return $arr;
-    }
+        function addSubCharger (&$subcharger) {//Input of type charger
+            $difference = abs ($this->jolts - $subcharger->jolts);
 
-    function printArray ($array){
-        foreach ($array as $entry){
-            echo $entry . " ";
-        }
-        echo "\n";
-    }
-
-    /*Everything's already sorted, so..
-    Start with the front. Add it to the head of empty permutations.
-    While (charger array full)
-    Dequeue the front of the charger array
-    If the max index of placeholder joins to the dequeued value, push to permutations.    
-    Do nothing otherwise*/
-
-    //At the end of the loop:
-    //the last one is the phone, echo the permutation, update the counter, echo the counter.
-    
-    function permutationSearch($data, $permutation, $end, &$counter){
-        while ($data->isEmpty()!=true){
-            $entry = $data->dequeue();
-            $calcdistance = abs($permutation->offsetGet($permutation->count()-1) - $entry);
-            if ($calcdistance<=3){
-                $permutation->enqueue ($entry);
+            if (count($this->chargersthatfit) == 3){
+                return;
+            }
+            else if ($difference > 3 || $difference < 1){
+                return;
             }
             else{
-                $data->dequeue();
+                array_push($this->chargersthatfit, $subcharger);
             }
-            permutationSearch ($data, $permutation, $end, $counter);    
         }
-        if ($permutation[count($permutation)-1]==$end){
-            printArray($permutation);
-            $counter+=1;
+
+    }
+
+    /* can't think of an algorithm...
+    function printPermutations ($chargers){
+        echo $chargers[0]->jolts . " ";
+        foreach ($chargers[0]->chargersthatfit as $charger){
+            echo $charger->jolts . " ";
+        }
+        array_shift($chargers);
+        if (count($chargers)!=0){
+            printPermutations($chargers);
+        }
+        else{
+            echo "\n";
+            return;
+        }
+    }*/
+
+    //Solution's fine with smaller n
+    function generator ($node, &$counter, $max){
+        if($node->jolts==$max){
+            //echo $node->jolts;
+            $counter++;
+            //echo "\n";
+        }
+        else if ($node!=null){
+            //echo $node->jolts . " ";
+        }
+        else{
+            return;
+        }
+
+        foreach ($node->chargersthatfit as $charger){
+            generator($charger, $counter, $max);
         }
     }
 
+    //Subreddit mentioned memoization and my memory of it from uni is hazy.
+    //Write down the results somewhere and reuse.
+    //Wikipedia said to use the most recent result that you stored somewhere.
 
-    //Maybe do a tree instead and depth first
-    class node {
-        public $jolts;
-        public $subkeys=array(); //Will hold references to other chargers **** at most 3
-    }
+    //Another way to think about it is:
+    //Start with 1 charger, and you have 1 permutation.
+    //Each layer you add, 
 
 
     $parse = fopen("inputs.txt", "r");
@@ -100,40 +87,68 @@
         array_push($data, $charge);
     }
     //The last one will be the wall
-
     fclose($parse);
 
     bubbleCharger($data);
-    setReferencesAndDistances($data);
 
     //Add last device
     $phone = new charger;
     $phone->jolts=($data[count($data)-1]->jolts)+3;
-    $phone->prev=&$data[count($data)-1];
-    $phone->distanceToPrev=3;
-
     array_push($data, $phone);
 
-    $counter = bucketCount($data);
+    //Part 2
+    //Data already holds new chargers
+    //Everything is sorted already.
 
-    //echo $counter[1]*$counter[3];
-
-    //Part 2*******
-    //Push everything to a queue for now
-    $data2 = new SplQueue;
-    foreach ($data as $entry){
-        $data2->enqueue($entry->jolts);
+    //Add the references
+    for($x=0; $x<count($data)-3; $x+=1){
+        for ($y=1; $y<4; $y++){
+            $data[$x]->addSubCharger($data[$x+$y]);
+        }
     }
+    //Manually check the third last and second last
+    $data[count($data)-3]->addSubCharger($data[count($data)-2]);
+    $data[count($data)-3]->addSubCharger($data[count($data)-1]);
 
-    //var_dump($data2);
-    // $start = $data[0];
-    $end = $data[count($data)-1]->jolts;
+    $data[count($data)-2]->addSubCharger($data[count($data)-1]);
+    
+    //What now?
+    $counter=1;
+    //generator($data[0], $counter, $phone->jolts);
 
-    //Maybe it could be done without a search? 
-    $permutation = new SplQueue();
-    $permutation->enqueue($data2->dequeue());
+    /*
+    for ($x=0; $x<count($data); $x++){
+        if (count($data[$x]->chargersthatfit)>=1){
+            $counter*=count($data[$x]->chargersthatfit);
+        }
+        else{
+            $counter*=1;
+        }
+    }*/
 
-    $counter=0;
-    permutationSearch ($data2, $permutation, $end, $counter);
+    //root
+    //we know how many elements there are in its sub array
+    //skip that many in a loop
+    //counter *= how many
+    //move to the highest of the bunch
+
+    //count the next layer
+
+                    //branch
+                    // ->
+                    //\\branch
+               //branch                   \
+    //Start->   branch                         ->End
+    //         \\branch
+    $index=0;
+    while ($index<count($data)-1){
+        $tempcount=0;
+        for ($y=0; $y<count($data[$index]->chargersthatfit); $y++){
+            $tempcount+=1;
+        }
+        $index+=$tempcount;
+        $counter*=$tempcount;
+    }
     echo $counter;
+
 ?>
