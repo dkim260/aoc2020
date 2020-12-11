@@ -15,6 +15,8 @@
     class charger {
         public $jolts;
         public $chargersthatfit = array(); //Will hold references to other chargers **** at most 3
+        public $chargersthatfitself = array();
+        public $otherconnections=0;
 
         function addSubCharger (&$subcharger) {//Input of type charger
             $difference = abs ($this->jolts - $subcharger->jolts);
@@ -70,13 +72,33 @@
     //Subreddit mentioned memoization and my memory of it from uni is hazy.
     //Write down the results somewhere and reuse.
     //Wikipedia said to use the most recent result that you stored somewhere.
+    //Start from the last charger?
+    //Start from the last charger and move backwards from n, n-1, n-2... 1
+    //The first charger will have at most 3
+    //The last charger will have at most 1
+    function generator2 ($data, $index, $max){
+        if($data[$index]->jolts==$max){
+            $data[$index]->otherconnections++;
+            return generator2($data, $index-1, $max);
+        }
+        else if ($data[$index]->jolts==0){ //Going to be a maximum of three.
+            foreach ($data[$index]->chargersthatfit as $charger){
+                $data[$index]->otherconnections+=$charger->otherconnections;
+            }
+            return $data[$index]->otherconnections;
+        }
+        else if ($data[$index]!=null){ //Going to be a maximum of three.
+            foreach ($data[$index]->chargersthatfit as $charger){
+                $data[$index]->otherconnections+=$charger->otherconnections;
+            }
+            return generator2($data, $index-1, $max);
+        }
+        else{//Something went wrong!
+            return;
+        }
+    }
 
-    //Another way to think about it is:
-    //Start with 1 charger, and you have 1 permutation.
-    //Each layer you add, 
-
-
-    $parse = fopen("inputs.txt", "r");
+    $parse = fopen("input.txt", "r");
 
     $data = array();
 
@@ -140,6 +162,15 @@
                //branch                   \
     //Start->   branch                         ->End
     //         \\branch
+    /*
+
+    //Another way to think about it is:
+    //Start with 1 charger, and you have 1 permutation.
+    //Each layer you add, 
+
+    //... work backwards?
+
+
     $index=0;
     while ($index<count($data)-1){
         $tempcount=0;
@@ -149,6 +180,9 @@
         $index+=$tempcount;
         $counter*=$tempcount;
     }
-    echo $counter;
+    */
+    //var_dump($data[count($data)-1]);
+
+    echo generator2($data, count($data)-1, $data[count($data)-1]->jolts);
 
 ?>
