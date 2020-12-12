@@ -15,13 +15,13 @@
         return preg_replace("/\./", "", $string);
     }
 
-    function linearSearch ($bag, $color){//Takes in an array of bags, find if colors (string) exists in array
+    function linearSearch (&$bag, $color){//Takes in an array of bags, find if colors (string) exists in array. Return the bag
         for ($x=0; $x<count($bag); $x+=1){
             if ($bag[$x]->color==$color){
-                return true;
+                return $bag[$x];
             }
         }
-        return false;
+        return null;
     }
 
     $goldBag = new bag; //Gold bag
@@ -31,8 +31,8 @@
     $carriage = array(); //Contains all bags
 
     $parse = fopen("input.txt", "r");
+    $line = fgets($parse);
     while (!feof($parse)){
-        $line = fgets($parse);
         $bagRule = new bag;
         if (preg_match("/no other bags/", $line)){
             $tempcolors = sscanf($line, "%s%s");
@@ -56,6 +56,7 @@
             }
         }
         array_push($carriage, $bagRule);
+        $line = fgets($parse);
     }
     fclose($parse);
 
@@ -85,9 +86,6 @@
             }
         }
     }
-    // var_dump($hasGoldBag);
-    // var_dump($hasNoBag);
-    // var_dump($ambiguousBags);
     function getEntry (&$array, $search){//Look at array, and get the entry for search=another entry
         for ($x=0; $x<count($array); $x+=1){
             if($array[$x]->color==$search->color)
@@ -96,10 +94,6 @@
             }
         }
     }
-    // var_dump($ambiguousBags);
-    // $var = $ambiguousBags[2]->otherBags; //2->1 child is vibrant plum
-    // $vartest = $ambiguousBags[4]; //4 -- vibrantplum
-    // var_dump(getEntry($var, $vartest));
     function removeEntry (&$array, $search){
         for ($x=0; $x<count($array); $x+=1){
             if($array[$x]->color==$search->color)
@@ -109,34 +103,61 @@
         }
 
     }
+
     //gold bags is considered ambiguous, remove it
     removeEntry($ambiguousBags, $goldBag);
     $ambiguousBags=array_values($ambiguousBags);
 
-    function modifySelf ($array){
-        global $hasGoldBag;
-        global $ambiguousBags;
-        global $hasNoBag;
+    //var_dump(linearSearch($hasNoBag,"fadedblue"));
 
-        foreach ($array as $entry){
-            echo "childcolor: " . $entry->color . ": contains: ";
-            if (getEntry($hasGoldBag, $entry)!=null){ //The color contains a gold bag
-                echo "Gold bag ";
+    //More filtering
+    foreach ($ambiguousBags as $bag){
+        foreach($bag->otherBags as $subbag){
+            $test = linearSearch($ambiguousBags,$subbag->color);
+            $test2 = linearSearch($hasGoldBag,$subbag->color);
+            $test3 = linearSearch($hasNoBag,$subbag->color);
+            if($test!=null){
+                array_push($bag->otherBags, $test);
             }
-            else if (getEntry($hasNoBag, $entry)!=null){ //The color contains no bag
-                echo "No bag ";
+            else if ($test2!=null){
+                array_push($bag->otherBags, $test2);
             }
-            else
-            {
-                array_push($entry->otherBags , (getEntry($ambiguousBags, $entry))   ); //
-                modifySelf($entry->otherBags);
+            else if ($test3!=null){
+                array_push($bag->otherBags, $test3);
+
             }
         }
     }
 
-    foreach ($ambiguousBags as $bag){
-        echo "\nambiguous entry color: " . $bag->color . "\n";
-        modifySelf ($bag->otherBags);
+    function deepBag (&$bag, &$truthy){
+        if ($bag->color=="shinygold"){
+            return $truthy||true;
+        }
+        else if (count($bag->otherBags)==0){
+            return $truthy||false;
+        }
+        else{
+            foreach ($bag->otherBags as $otherBag){
+                deepBag($otherBag, $truthy);
+            }
+            return $truthy;
+        }
     }
+
+
+    var_dump(count($ambiguousBags));
+    //$counter=count($hasGoldBag);
+
+
+    $counter=0;
+    foreach ($ambiguousBags as $bag){
+        foreach($bag->otherBags as $subbag){
+            $truthy=false;
+            if (deepBag($subbag, $truthy)==true){
+                $counter+=1;
+            }
+        }
+    }
+    echo $counter;
 
 ?>
