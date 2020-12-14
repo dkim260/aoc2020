@@ -1,5 +1,100 @@
 <?php
 
+    class waypoint
+    {
+        public $x; public $y;
+        public $ship;
+
+        public function goN($units){
+            $this->y+=$units;
+        }
+        public function goS($units){
+            $this->y-=$units;
+        }
+        public function goE($units){
+            $this->x+=$units;
+        }
+        public function goW($units){
+            $this->x-=$units;
+        }
+
+        public function goL($units){ //Feel like this is cheating, but problem was a bit hard to understand
+            if ($units==90){
+                //10e 4n <- 4e 10s
+                $temp = $this->y;
+                $this->y=$this->x;
+                $this->x=$temp*-1;
+            }
+            else if ($units==180){
+                $this->x = $this->x * -1;
+                $this->y = $this->y * -1;                
+            }
+            else if ($units==270){
+                $this->goR(90);
+            }
+            else{
+                printf ("Something went wrong\n");
+            }
+        }
+        public function goR($units){
+            if ($units==90){
+                //Not correct... If you apply goR(90) twice it doesnt become goR(180)
+                /*
+                $temp = $this->x;
+                $this->x = $this->y;
+                $this->y = $temp * -1;*/
+                //10e 4n -> 4e 10s
+                if ($this->x>=0 && $this->y>=0){
+                    $temp = $this->x;
+                    $this->x = $this->y;
+                    $this->y = $temp * -1;
+                }
+                else if ($this->x>=0 && $this->y<0){//Double check TODO ****************
+                }
+                else if ($this->y<0 && $this->x<0){
+                }
+                else{
+                }
+
+            }
+            else if ($units==180){
+                $this->x = $this->x * -1;
+                $this->y = $this->y * -1;
+            }
+            else if ($units==270){
+                $this->goL(90);
+            }
+            else{
+                printf("Something went wrong\n");
+            }
+        }
+
+        public function goF($units){
+            if ($this->x>=0){
+                $this->ship->goE($units*$this->x);
+            }
+            else{// ($this->x<0)
+                $this->ship->goW($units*$this->x);
+            }
+            if ($this->y>=0){
+                $this->ship->goN($units*$this->y);
+            }
+            else{
+                $this->ship->goS($units*$this->y);
+            }
+        }
+
+        public function __construct()
+        {
+            $this->x=10; 
+            $this->y=1;
+
+            $this->ship = new boat;
+            $this->ship->x=0;
+            $this->ship->y=0;
+        }
+    }
+
     class boat {
         public $x; public $y;
         public $facing=90; //going clockwise.
@@ -50,7 +145,7 @@
             $this->reposFacing();
         }
 
-        public function reposFacing(){ //Figure out the math for this
+        public function reposFacing(){
             if ($this->facing<0){
                 $this->facing *= -1;
                 $this->facing = 360-$this->facing;
@@ -60,10 +155,6 @@
                 $this->facing -= 360;
             }
             else{
-                /*
-                printf("Something went wrong refacing?\n");
-                var_dump($this);
-                */
             }
         }
 
@@ -72,8 +163,10 @@
         }
     }
 
-    $ship = new boat;
+    $wp = new waypoint;
+    var_dump($wp);
 
+    /*
     $parse = fopen("input.txt", "r");
 
     
@@ -98,5 +191,5 @@
     fclose($parse);
 
     printf ("Man sum: %d\n", $ship->manSum());
-
+*/
 ?>

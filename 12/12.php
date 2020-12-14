@@ -50,7 +50,7 @@
             $this->reposFacing();
         }
 
-        public function reposFacing(){ //Figure out the math for this
+        public function reposFacing(){
             if ($this->facing<0){
                 $this->facing *= -1;
                 $this->facing = 360-$this->facing;
@@ -60,10 +60,6 @@
                 $this->facing -= 360;
             }
             else{
-                /*
-                printf("Something went wrong refacing?\n");
-                var_dump($this);
-                */
             }
         }
 
