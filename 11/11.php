@@ -296,5 +296,5 @@
         $currentState = seat::returnSeats($seats, $numofcolumns, $numofrows);
     }
 
-    printf("num of unoccupied: %d\n", seat::countOccupied($seats, $numofcolumns, $numofrows));
+    printf("num of occupied: %d\n", seat::countOccupied($seats, $numofcolumns, $numofrows));
 ?>
