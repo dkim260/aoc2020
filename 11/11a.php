@@ -39,94 +39,155 @@
         function readyNextState (){
             if ($this->state=="L"){
                 $truthy = true;
-                if ($this->right!=null){
-                    if($this->right->state=="#"){
-                        $truthy=false;
-                    }
+
+                $right = $this->right;
+                $counter=0;
+                while ($right->state!=null && $right->state=="."){ //Stuck in an infinite loop
+                    $right = $right->right;
+                    
+                    $counter++;
                 }
-                if ($this->left!=null){
-                    if($this->left->state=="#"){
-                        $truthy=false;
-                    }
+                if($right->state=="#"){
+                    $truthy=false;
                 }
-                if ($this->top!=null){
-                    if($this->top->state=="#"){
-                        $truthy=false;
-                    }
+
+                $left = $this->left;
+                while ($left->state!=null && $left->state=="."){
+                    $left = $left->left;
                 }
-                if ($this->bottom!=null){
-                    if($this->bottom->state=="#"){
-                        $truthy=false;
-                    }
+                if($left->state=="#"){
+                    $truthy=false;
                 }
-                if ($this->topright!=null){
-                    if($this->topright->state=="#"){
-                        $truthy=false;
-                    }
+
+                $top = $this->top;
+                while ($top->state!=null && $top->state=="."){
+                    $top = $top->top;
                 }
-                if ($this->topleft!=null){
-                    if($this->topleft->state=="#"){
-                        $truthy=false;
-                    }
+                if($top->state=="#"){
+                    $truthy=false;
                 }
-                if ($this->bottomleft!=null){
-                    if($this->bottomleft->state=="#"){
-                        $truthy=false;
-                    }
+
+                $bottom = $this->bottom;
+                while ($bottom->state!=null && $bottom->state=="."){
+                    $bottom = $bottom->bottom;
                 }
-                if ($this->bottomright!=null){
-                    if($this->bottomright->state=="#"){
-                        $truthy=false;
-                    }
+                if($bottom->state=="#"){
+                    $truthy=false;
                 }
+
+                $topright = $this->topright;
+                while ($topright->state!=null && $topright->state=="."){
+                    $topright = $topright->topright;
+                }
+                if($topright->state=="#"){
+                    $truthy=false;
+                }
+
+                $topleft = $this->topleft;
+                while ($topleft->state!=null && $topleft->state=="."){
+                    $topleft = $topleft->topleft;
+                }
+                if($topleft->state=="#"){
+                    $truthy=false;
+                }
+
+                $bottomleft = $this->bottomleft;
+                while ($bottomleft->state!=null && $bottomleft->state=="."){
+                    $bottomleft = $bottomleft->bottomleft;
+                }
+                if($bottomleft->state=="#"){
+                    $truthy=false;
+                }
+
+                $bottomright = $this->bottomright;
+                while ($bottomright->state!=null && $bottomright->state=="."){
+                    $bottomright = $bottomright->bottomright;
+                }
+                if($bottomright->state=="#"){
+                    $truthy=false;
+                }
+
                 if ($truthy==true){
                     $this->nextstate="#";
                 }
             }
             if ($this->state=="#"){
                 $counter=0;
-                if ($this->right!=null){
-                    if ($this->right->state=="#")
-                    {
-                        $counter+=1;
-                    }
+
+                $right = $this->right;
+                while ($right->state!=null && $right->state=="."){
+                    $right = $right->right;
                 }
-                if ($this->left!=null){
-                    if ($this->left->state=="#"){
-                        $counter+=1;
-                    }
+                if ($right->state=="#")
+                {
+                    $counter+=1;
                 }
-                if ($this->top!=null){
-                    if ($this->top->state=="#"){
-                        $counter+=1;
-                    }
+
+                $left = $this->left;
+                while ($left->state!=null && $left->state=="."){
+                    $left = $left->left;
                 }
-                if ($this->bottom!=null){
-                    if ($this->bottom->state=="#"){
-                        $counter+=1;
-                    }
+                if ($left->state=="#")
+                {
+                    $counter+=1;
                 }
-                if ($this->topleft!=null){
-                    if ($this->topleft->state=="#"){
-                        $counter+=1;
-                    }
+
+                $top = $this->top;
+                while ($top->state!=null && $top->state=="."){
+                    $top = $top->top;
                 }
-                if ($this->topright!=null){
-                    if ($this->topright->state=="#"){
-                        $counter+=1;
-                    }
+                if ($top->state=="#")
+                {
+                    $counter+=1;
                 }
-                if ($this->bottomleft!=null){
-                    if ($this->bottomleft->state=="#"){
-                        $counter+=1;
-                    }
+
+                $bottom = $this->bottom;
+                while ($bottom->state!=null && $bottom->state=="."){
+                    $bottom = $bottom->bottom;
                 }
-                if ($this->bottomright!=null){
-                    if ($this->bottomright->state=="#"){
-                        $counter+=1;
-                    }
+                if ($bottom->state=="#")
+                {
+                    $counter+=1;
                 }
-                if ($counter>=4){
+
+                $topleft = $this->topleft;
+                while ($topleft->state!=null && $topleft->state=="."){
+                    $topleft = $topleft->topleft;
+                }
+                if ($topleft->state=="#")
+                {
+                    $counter+=1;
+                }
+
+                $topright = $this->topright;
+                while ($topright->state!=null && $topright->state=="."){
+                    $topright = $topright->topright;
+                }
+                if ($topright->state=="#")
+                {
+                    $counter+=1;
+                }
+
+                $bottomleft = $this->bottomleft;
+                while ($bottomleft->state!=null && $bottomleft->state=="."){
+                    $bottomleft = $bottomleft->bottomleft;
+                }
+                if ($bottomleft->state=="#")
+                {
+                    $counter+=1;
+                }
+                
+                $bottomright = $this->bottomright;
+                while ($bottomright->state!=null && $bottomright->state=="."){
+                    $bottomright = $bottomright->bottomright;
+                }
+                if ($bottomright->state=="#")
+                {
+                    $counter+=1;
+                }
+                
+
+                if ($counter>=5){
                     $this->nextstate="L";
                 }
                 else{
@@ -267,23 +328,23 @@
         }
     }
 
-    seat::printSeats($seats, $numofcolumns, $numofrows);
-    printf("\n");
+    //seat::printSeats($seats, $numofcolumns, $numofrows);
+    //printf("\n");
     //Have to prep iterations.
     seat::readyNextStates($seats, $numofcolumns, $numofrows);
     //Then execute
     seat::iterateNextState($seats, $numofcolumns, $numofrows);
 
-    seat::printSeats($seats, $numofcolumns, $numofrows);
-    printf("\n");
+    //seat::printSeats($seats, $numofcolumns, $numofrows);
+    //printf("\n");
 
     $previousState = seat::returnSeats($seats, $numofcolumns, $numofrows);
 
     //part2
     seat::readyNextStates($seats, $numofcolumns, $numofrows);
     seat::iterateNextState($seats, $numofcolumns, $numofrows);
-    seat::printSeats($seats, $numofcolumns, $numofrows);
-    printf("\n");
+    //seat::printSeats($seats, $numofcolumns, $numofrows);
+    //printf("\n");
 
     $currentState = seat::returnSeats($seats, $numofcolumns, $numofrows);
 
@@ -291,10 +352,10 @@
         $previousState = $currentState;
         seat::readyNextStates($seats, $numofcolumns, $numofrows);
         seat::iterateNextState($seats, $numofcolumns, $numofrows);
-        seat::printSeats($seats, $numofcolumns, $numofrows);
-        printf("\n");
+        //seat::printSeats($seats, $numofcolumns, $numofrows);
+        //printf("\n");
         $currentState = seat::returnSeats($seats, $numofcolumns, $numofrows);
     }
 
-    printf("num of unoccupied: %d\n", seat::countOccupied($seats, $numofcolumns, $numofrows));
+    printf("num of occupied: %d\n", seat::countOccupied($seats, $numofcolumns, $numofrows));
 ?>

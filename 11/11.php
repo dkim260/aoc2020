@@ -267,23 +267,23 @@
         }
     }
 
-    seat::printSeats($seats, $numofcolumns, $numofrows);
-    printf("\n");
+    //seat::printSeats($seats, $numofcolumns, $numofrows);
+    //printf("\n");
     //Have to prep iterations.
     seat::readyNextStates($seats, $numofcolumns, $numofrows);
     //Then execute
     seat::iterateNextState($seats, $numofcolumns, $numofrows);
 
-    seat::printSeats($seats, $numofcolumns, $numofrows);
-    printf("\n");
+    //seat::printSeats($seats, $numofcolumns, $numofrows);
+    //printf("\n");
 
     $previousState = seat::returnSeats($seats, $numofcolumns, $numofrows);
 
     //part2
     seat::readyNextStates($seats, $numofcolumns, $numofrows);
     seat::iterateNextState($seats, $numofcolumns, $numofrows);
-    seat::printSeats($seats, $numofcolumns, $numofrows);
-    printf("\n");
+    //seat::printSeats($seats, $numofcolumns, $numofrows);
+    //printf("\n");
 
     $currentState = seat::returnSeats($seats, $numofcolumns, $numofrows);
 
@@ -291,8 +291,8 @@
         $previousState = $currentState;
         seat::readyNextStates($seats, $numofcolumns, $numofrows);
         seat::iterateNextState($seats, $numofcolumns, $numofrows);
-        seat::printSeats($seats, $numofcolumns, $numofrows);
-        printf("\n");
+        //seat::printSeats($seats, $numofcolumns, $numofrows);
+        //printf("\n");
         $currentState = seat::returnSeats($seats, $numofcolumns, $numofrows);
     }
 
