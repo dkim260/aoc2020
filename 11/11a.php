@@ -40,12 +40,10 @@
             if ($this->state=="L"){
                 $truthy = true;
 
+                //Got hard to debug Dx
                 $right = $this->right;
-                $counter=0;
-                while ($right->state!=null && $right->state=="."){ //Stuck in an infinite loop
+                while ($right->state!=null && $right->state=="."){
                     $right = $right->right;
-                    
-                    $counter++;
                 }
                 if($right->state=="#"){
                     $truthy=false;
