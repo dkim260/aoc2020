@@ -1,5 +1,12 @@
 <?php
 
+    class bus { //Wonder if this is the right abstraction
+        public $id;
+        public $countx; //==1 if the next one is not an x
+        public $next; //address
+    }
+
+
     $parse = fopen("inputs.txt", "r");
     fgets($parse);
     $busses = preg_split("[,]", fgets($parse));
@@ -16,12 +23,6 @@
     //var_dump($busses);
 
     //Need to find time stamp that fits the sequence
-
-    class bus { //Wonder if this is the right abstraction
-        public $id;
-        public $countx; //==1 if the next one is not an x
-        public $next; //address
-    }
 
     $sequence = array();
 
@@ -55,7 +56,7 @@
     //var_dump($sequence);
     
     //All busses depart at 0.
-    //The next time they will all meet is at $sequence[0] * $sequnce[1] * $sequnce[2] ....
+    //The next time they will all depart at the same time is at $sequence[0] * $sequnce[1] * $sequnce[2] ....
     $meet = 1;
     foreach ($sequence as $bus){
         $meet *= $bus->id;
@@ -63,39 +64,38 @@
 
     //var_dump($meet);
 
-    //Plan:
-    //start with sequence[0]. Double self until the next one is $sequence[1].
-    //Keep track the distance
-    //Find the next sequence.
-
-    //Overwrite the distance
-    //Double distance until the next condition
-
+    //Attempt
     //Condition: ( depart + countx ) % this->next->id == 0 
+    //Doesn't work
+    //I thought that if you keep doubling the departure time then the xcounts would align / scale linearly
+    //77, 78 
+    //78*10-1%7 != 0
+    //77*10+1%13 != 0 
 
-    $depart=0;
-    $index=0;
-    //Base case
-    $distance=$sequence[$index]->id;
+    //7 * 13 = 91
+    //91 - 13 = 78
 
-    $current = $sequence[$index];
-    $depart+=$distance;
-    $countx=$current->countx;
-
-    while ($depart<$meet && $index<count($sequence)-1)
-    {
-        while (($depart + $countx) % $current->next->id != 0)
+    //Find the third departure as if there were no xs
+    /*
+    for ($runner=1; $runner<=5369; $runner++){
+        if ((($runner+2) % 59 == 0) && (($runner+1)%13==0) && ($runner%7==0))
         {
-            $depart+=$distance; //Something's not right here
+            printf($runner);
         }
-        var_dump($depart);
-        $index++;
-        $distance = $depart;
-        $current = $sequence[$index];
-        $countx+=$current->countx;
-    }
+    }*/
+    //0, 77, 4718
 
-    //var_dump($current);
-    //var_dump($depart);
+    //Find the third departure as if there are xs
+    /*
+    for ($runner=1; $runner<=714924299; $runner++){
+        if ((($runner+4) % 59 == 0) && (($runner+1)%13==0) && ($runner%7==0))
+        {
+            var_dump($runner);
+            break;
+        }
+    }*/
+    //0, 77, 350
+    
+    //(departure + lastindex) % lastbusid == 0
 
 ?>
