@@ -7,6 +7,8 @@
     }
 
 
+
+
     $parse = fopen("input.txt", "r");
     fgets($parse);
     $busses = preg_split("[,]", fgets($parse));
@@ -67,12 +69,16 @@
         }
     }*/
 
+    /*
     for ($x=0; $x<$departure; $x+=$sequence[0]->id){
         if (validate($x, $sequence)==true){
             var_dump($x);
         }
     }
+    */
 
-
+    //Some sort of sieve?
+    //Push all the multiples of sequence[0] into an array until the ceiling
+    //-----   Ran out of memory with a naiive implementation -----
 
 ?>
