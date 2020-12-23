@@ -1,47 +1,34 @@
 <?php
-
-    class spoke {
-        public $value;
-        public $lastTurn;
-        public $spoke=false;
+    class word{
+        public $age;
+        public $spoken=false;
     }
 
-    function speak ($nums, $counter){
-
+    function speak (&$array){ //returns elf speak
+        if ($array[count($array)-1]->spoken==false){
+            return 0;
+        }
+        else {
+            $array[$array[count($array)-1]->age]->age = count($array) - $array[count($array)-1]->age;
+            return $array[count($array)-1]->age;
+        }
     }
 
-    $parse = fopen("inputs.txt", "r");
+    //
 
-    $start = preg_split("[,]",fgets($parse));
-    $start = array_map (fn ($x) => preg_replace("[\r\n]",'',$x), $start);
+    $inputs = [0,3,6];
 
-    fclose($parse);
+    //$inputs = [0,1,4,13,15,12,16];
 
-    $nums = array();
+    //var_dump($inputs);
 
-    $count=1;
-    foreach ($start as $num){
-        $temp = new spoke;
-        $temp->value=$num; 
-        $temp->lastTurn=$count;
+    $counter=0;
 
-        array_push($nums, $temp);
-        $count++;
-    }
-    var_dump($nums);
+    $words = array();
 
-    $carriage = array();
-
-    $lastspoke = &$nums[$count-1];
-    if ($lastspoke->spoke===false){
-//        array_push($carriage);
-
-        $lastspoke->spoke=true;
+    while ($counter<2020){
+        $counter++;
     }
 
-    while ($count<=2020){
-
-        $count++;
-    }
 
 ?>
