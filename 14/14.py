@@ -1,4 +1,5 @@
 #https://www.reddit.com/r/adventofcode/comments/kcr1ct/2020_day_14_solutions/gfshjtl/?utm_source=reddit&utm_medium=web2x&context=3
+#i used this as a reference to test against my input
 
 import fileinput
 def write(memory, mask, address, value):
