@@ -22,3 +22,6 @@
 33-768 - 149
 
 All the inputs for your ticket were small enough that the second ranges didn't matter
+
+
+508196 is too high, I forgot to mark the second range, line 140-143

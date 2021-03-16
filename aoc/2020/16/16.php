@@ -30,9 +30,6 @@
     }
 
     class space {
-        public $visits=0;
-        public $visitors=array();
-
         public $marks=0;
         public $referenceRules=array();
     }
@@ -140,15 +137,40 @@
             array_push($highlighter[$x]->referenceRules, $rule);
             $highlighter[$x]->marks++;
         }
+        for ($x=$rule->lower2; $x<=$rule->upper2; $x++){
+            array_push($highlighter[$x]->referenceRules, $rule);
+            $highlighter[$x]->marks++;
+        }
     }
 
     //Mark sections ticket fulfills
+    /*
     foreach ($firstticket->inputs as $section){
         $highlighter[$section]->visits++;
         array_push($highlighter[$section]->visitors, $section);
     }
+    */
 
     //What does this mean?
+
+    //If highlighter[$section] rule references are empty, that's an invalid ticket?
+    $counter = 0;
+    foreach ($tickets as $ticket){
+        $errorcode = 0;
+
+        //$display = false;
+        foreach ($ticket->inputs as $section){
+            if (count($highlighter[$section]->referenceRules)===0){
+                $errorcode+=$section;
+            }
+        }
+        if ($errorcode!==0){
+            //unset($tickets[$ticket]);
+            $counter+=$errorcode;
+            //var_dump($errorcode);
+        }
+    }
+    printf("Total error: %d", $counter);
 
     return;
 
