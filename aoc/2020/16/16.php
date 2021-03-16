@@ -29,6 +29,23 @@
         public $inputs = array(); //array
     }
 
+    class space {
+        public $visits=0;
+        public $visitors=array();
+
+        public $marks=0;
+        public $referenceRules=array();
+    }
+
+    function verifyTicket (array $inputs){
+        foreach ($inputs as $input){
+            if ($input->marked==false){
+                return False;
+            }
+        }
+        return True;
+    }
+
     $file = fopen("input.txt", "r");
 
     $rules=array();
@@ -76,42 +93,62 @@
     }
     fclose($file);
 
-    $sections = array();
 
     //I want to roll out the bounds like a piece of string
     //Or, maybe set up a graph and mark edges as visited
 
-    //split rules
-    foreach ($rules as $rule){
-        $nod1 = new node;
-        $nod1->start = $rule->lower1;
-        $nod1->end = $rule->upper1;
-        
-        $nod2 = new node;
-        $nod2->start = $rule->lower2;
-        $nod2->end = $rule->upper2;
+    //Old approach won't work, can't split the rules into two pieces
+    //$sections = array();
+    //It would work if you set a reference point
 
-        array_push($sections, $nod1);
-        array_push($sections, $nod2);
+    //Remove first ticket, we can use it as a test variable
+    $firstticket = array_shift($tickets);
+    $sectionscopy = $rules; //Don't know if it's a copy or reference
+
+    //Naiive
+    //Would have issues, because some combinations would work while others won't.
+    //So some backtracking might be required?
+    /*
+    foreach ($firstticket->inputs as $input){
+        foreach ($sectionscopy as $section){
+            if ($section->marked==false){
+                //Check boundaries
+                if ( ($input<=$section->upper1 && $input>=$section->lower1) || ($input<=$section->upper2 && $input>=$section->lower2)){
+                    $section->marked=true;
+                    unset($sectionscopy[$section]);
+                }
+            }
+        }  
+    }
+    */
+
+    //Some sort of tree?
+    //Some sort of subsets?
+    
+    //Create a 2d array/checkerboard and highlight ranges?
+    //Does it have to be a 2d array?
+    //Going to take up a lot of space probably, whoops
+
+    $highlighter = array();
+    for ($x=0; $x<1000; $x++){
+        $highlighter[$x]=new space;
     }
 
-    //add connections
-    foreach ($sections as $rule1){
-        foreach ($sections as $rule2){
-             if (!array_key_exists($rule2->start ,$rule1->connections) && $rule2->start <= $rule1->end){
-                 array_push($rule1->connections, $rule2);
-                 array_push($rule1->connectVisits, 0);
-             }
+    //Set up highlights
+    foreach ($rules as $rule){
+        for ($x=$rule->lower1; $x<=$rule->upper1; $x++){
+            array_push($highlighter[$x]->referenceRules, $rule);
+            $highlighter[$x]->marks++;
         }
     }
 
-    //sort the connections
-    foreach ($section as $sectionb){
-
+    //Mark sections ticket fulfills
+    foreach ($firstticket->inputs as $section){
+        $highlighter[$section]->visits++;
+        array_push($highlighter[$section]->visitors, $section);
     }
 
-    //find the highest gap each ticket section can fit
-    
+    //What does this mean?
 
     return;
 
