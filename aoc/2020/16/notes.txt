@@ -25,4 +25,30 @@ All the inputs for your ticket were small enough that the second ranges didn't m
 
 508196 is too high, I forgot to mark the second range, line 140-143
 Didn't have to sort
+
 Aw man I overthought the problem
+Day 16 extension: Determine if a ticket is valid, if multiple fields are incorrect and numbers aren't unique.
+
+//Sorting by your ticket ascending is too low: 66238993967
+
+400,76,450,113,305,98,490,558,475,941,449,104,139,392,508,790,571,79,85,557
+27-840 - 53
+28-176 - 59
+44-270 - 61
+33-197 - 67
+47-660 - 71
+45-744 - 73
+42-636 - 79
+44-243 - 83
+46-428 - 89
+25-862 - 97
+26-579 - 101
+38-683 - 103
+41-453 - 107
+48-279 - 109
+33-617 - 113
+39-328 - 127
+35-251 - 131
+25-380 - 137
+42-461 - 139
+33-768 - 149

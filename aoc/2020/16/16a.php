@@ -185,9 +185,65 @@
     $tickets = &$validtickets;
     $counter=0;
 
+    //Convert to 2d array
+    $convert = array();
+    foreach ($tickets as $ticket){
+        array_push($convert, $ticket->inputs);
+    }
+    $tickets = &$convert;
 
+    array_unshift($tickets, $firstticket->inputs);
+    
+    function bubbleSwap (array &$array){
+        for ($x = 0; $x<count($array[0]); $x++){
+            for ($y = $x+1; $y<count($array[0]); $y++){
+                if ($array[0][$x] > $array[0][$y]){
+                    $temp = $array[0][$x];
+                    $array[0][$x]=$array[0][$y];
+                    $array[0][$y]=$temp;
+                }
+            }
+        }        
+    }
 
+    //This doesn't look good
+    function bubbleSwop (array &$array){
+        while (verify($array)===false){
+            
+        }
 
+        for ($z=0; $z<count($array) && verify($array)===false; $z++){
+            for ($x = 0; $x<count($array[$z]); $x++){
+                for ($y = $x+1; $y<count($array[$z]); $y++){
+                    if ($array[$z][$x] > $array[$z][$y]){
+                        $temp = $array[$z][$x];
+                        $array[$z][$x]=$array[$z][$y];
+                        $array[$z][$y]=$temp;
+                    }
+                }
+            }
+        }
+
+        var_dump($array[0]);
+    }
+    //uh oh
+    function verify (array $array){
+        global $rules;
+        foreach ($array as $entry){
+            for ($x = 0; $x< count($entry); $x++){
+                if (!($entry[$x] >= $rules[$x]->lower1 && $entry[$x] <= $rules[$x]->upper1) && !($entry[$x] >= $rules[$x]->lower2 && $entry[$x] <= $rules[$x]->upper2) ){
+                    //var_dump($entry);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    //var_dump(verify($tickets));
+
+    bubbleSwop($tickets);
+
+    //maybe sort based off the highest high, and lowest low ticket? ticket with the largest range?
 
     return;
 
