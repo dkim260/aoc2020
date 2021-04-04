@@ -245,6 +245,8 @@
 
     //maybe sort based off the highest high, and lowest low ticket? ticket with the largest range?
 
+    //Look for the least flexible ticket? the most flexible?
+
     return;
 
 ?>
