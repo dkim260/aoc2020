@@ -193,59 +193,81 @@
     $tickets = &$convert;
 
     array_unshift($tickets, $firstticket->inputs);
-    
-    function bubbleSwap (array &$array){
-        for ($x = 0; $x<count($array[0]); $x++){
-            for ($y = $x+1; $y<count($array[0]); $y++){
-                if ($array[0][$x] > $array[0][$y]){
-                    $temp = $array[0][$x];
-                    $array[0][$x]=$array[0][$y];
-                    $array[0][$y]=$temp;
-                }
-            }
-        }        
-    }
-
-    //This doesn't look good
-    function bubbleSwop (array &$array){
-        while (verify($array)===false){
-            
-        }
-
-        for ($z=0; $z<count($array) && verify($array)===false; $z++){
-            for ($x = 0; $x<count($array[$z]); $x++){
-                for ($y = $x+1; $y<count($array[$z]); $y++){
-                    if ($array[$z][$x] > $array[$z][$y]){
-                        $temp = $array[$z][$x];
-                        $array[$z][$x]=$array[$z][$y];
-                        $array[$z][$y]=$temp;
-                    }
-                }
-            }
-        }
-
-        var_dump($array[0]);
-    }
-    //uh oh
-    function verify (array $array){
-        global $rules;
-        foreach ($array as $entry){
-            for ($x = 0; $x< count($entry); $x++){
-                if (!($entry[$x] >= $rules[$x]->lower1 && $entry[$x] <= $rules[$x]->upper1) && !($entry[$x] >= $rules[$x]->lower2 && $entry[$x] <= $rules[$x]->upper2) ){
-                    //var_dump($entry);
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    //var_dump(verify($tickets));
-
-    bubbleSwop($tickets);
 
     //maybe sort based off the highest high, and lowest low ticket? ticket with the largest range?
 
     //Look for the least flexible ticket? the most flexible?
+
+    //$rules, $tickets
+
+    //Something I'm seeing while I'm highlighting ticket values is that some values are repeated in other tickets
+    //Maybe put them in a map for now?
+    //Expression: pair?
+    //Is this a boolean satisfiability kind of thing?
+
+    //Use a set to hold the order {1,2,3..20}
+    $order = array();
+    for ($x =0; $x< 20; $x++){
+        array_push($order, $x);
+    }
+
+    //Some temporary idea / guess for now
+    //Ticket by ticket, try sorting by value
+
+    function bsort (&$array, &$array2){
+        //Count should be 20?
+        for ($x = 0; $x< count($array); $x++){
+            for ($y = $x+1; $y<count($array); $y++){
+                if ($array[$x]> $array[$y]){
+                    //Swap
+                    $temp = $array[$x];
+                    $array[$x] = $array[$y];
+                    $array[$y] = $temp;
+
+                    $temp = $array2[$x];
+                    $array2[$x] = $array2[$y];
+                    $array2[$y] = $temp;
+                }
+            }
+        }
+    }
+
+    function deepcopy($array){
+        $arrreturn = array();
+        foreach ($array as $entry){
+            array_push($arrreturn, $entry);
+        }
+        return $arrreturn;
+    }
+
+    //try each ticket
+    foreach ($ticket as $tickets){
+        $temparr = (deepcopy ($ticket->inputs));
+        $temporder = deepcopy ($order);
+
+        bsort($temparr, $temporder);
+        if (verify($temparr, $temporder)===true){
+            var_dump($temporder);
+        }
+    }
+
+    //parse through the all tickets: and check ticket[order] -> rule[order] is satisfied
+    function verify ($tickets, $order){
+        global $rules;
+
+        //Tickets
+        foreach ($tickets as $ticket){
+            //Order
+            foreach ($order as $entry){
+                //Verify the rule
+                /* if (){return true;} */
+                if ($ticket >=$rules[$entry]->lower1 && $ticket <=$rules[$entry]->upper1 || $ticket>=$rules[$entry]->lower2 && $ticket<=$rules[$entry]->upper2){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     return;
 
