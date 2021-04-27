@@ -241,16 +241,17 @@
     }
 
     //try each ticket
-    foreach ($ticket as $tickets){
-        $temparr = (deepcopy ($ticket->inputs));
+    for ($x = 0; $x< count($tickets); $x++){
+        $temparr = (deepcopy($tickets[$x]));
         $temporder = deepcopy ($order);
 
         bsort($temparr, $temporder);
-        if (verify($temparr, $temporder)===true){
+        if (verify($tickets, $temporder)===true){
             var_dump($temporder);
         }
     }
 
+    //TODO: Fix the verify function
     //parse through the all tickets: and check ticket[order] -> rule[order] is satisfied
     function verify ($tickets, $order){
         global $rules;
@@ -261,12 +262,12 @@
             foreach ($order as $entry){
                 //Verify the rule
                 /* if (){return true;} */
-                if ($ticket >=$rules[$entry]->lower1 && $ticket <=$rules[$entry]->upper1 || $ticket>=$rules[$entry]->lower2 && $ticket<=$rules[$entry]->upper2){
-                    return true;
+                if (($ticket >=$rules[$entry]->lower1 && $ticket <=$rules[$entry]->upper1 || $ticket>=$rules[$entry]->lower2 && $ticket<=$rules[$entry]->upper2) === false){
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
     return;
