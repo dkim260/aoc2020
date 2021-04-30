@@ -205,15 +205,49 @@
     //Expression: pair?
     //Is this a boolean satisfiability kind of thing?
 
-    //Use a set to hold the order {1,2,3..20}
+    //Use an array to hold the order {1,2,3..20}
     $order = array();
     for ($x =0; $x< 20; $x++){
         array_push($order, $x);
     }
 
+    //Array deep copy
+    function deepcopy($array){
+        $arrreturn = array();
+        foreach ($array as $entry){
+            array_push($arrreturn, $entry);
+        }
+        return $arrreturn;
+    }
+
+    //check ticket[order] -> rule[0,1,2,...19] is satisfied
+    //This function wasn't correct
+    /*
+    function verify ($tickets, $order){
+        global $rules;
+
+        //Tickets
+        foreach ($tickets as $ticket){
+            $x=0;
+
+            //Order
+            foreach ($order as $entry){
+                //Verify the rule
+                /* if (){return true;} */
+                /*
+                if (($ticket[$entry] >= $rules[$x]->lower1 && $ticket[$entry] <= $rules[$x]->upper1 || $ticket[$entry] >= $rules[$x]->lower2 && $ticket[$entry] <= $rules[$x]->upper2) === false){
+                    return false;
+                }
+                $x++;
+            }
+        }
+        return true;
+    }
+    */
+
     //Some temporary idea / guess for now
     //Ticket by ticket, try sorting by value
-
+    
     function bsort (&$array, &$array2){
         //Count should be 20?
         for ($x = 0; $x< count($array); $x++){
@@ -231,45 +265,68 @@
             }
         }
     }
-
-    function deepcopy($array){
-        $arrreturn = array();
-        foreach ($array as $entry){
-            array_push($arrreturn, $entry);
-        }
-        return $arrreturn;
-    }
-
+    //Then do something with the rules?
+    //Sort rules by upper1 ascending?
+    
     //try each ticket
+    /*
     for ($x = 0; $x< count($tickets); $x++){
         $temparr = (deepcopy($tickets[$x]));
         $temporder = deepcopy ($order);
 
-        bsort($temparr, $temporder);
-        if (verify($tickets, $temporder)===true){
-            var_dump($temporder);
-        }
+        //bsort($temparr, $temporder);
     }
+    */
+    
 
-    //TODO: Fix the verify function
-    //parse through the all tickets: and check ticket[order] -> rule[order] is satisfied
-    function verify ($tickets, $order){
-        global $rules;
-
-        //Tickets
-        foreach ($tickets as $ticket){
-            //Order
-            foreach ($order as $entry){
-                //Verify the rule
-                /* if (){return true;} */
-                if (($ticket >=$rules[$entry]->lower1 && $ticket <=$rules[$entry]->upper1 || $ticket>=$rules[$entry]->lower2 && $ticket<=$rules[$entry]->upper2) === false){
-                    return false;
+    //Currently the above isn't working
+    //Try brute force:
+    //20! = ~5 quintillion...
+    /*
+    function permutations ($orderholder, $inputs){
+        global $tickets;
+        if (count($orderholder)===20){
+            if (verify($tickets, $orderholder) === true){
+                var_dump($inputs);
+            }
+            else{
+                $orderholder;
+            }
+            return;
+        }
+        else{
+            foreach ($inputs as $input){
+                if (array_search($input,$orderholder)===false){
+                    $temp = deepcopy($orderholder);
+                    array_push($temp, $input);
+                    $temp2 = deepcopy($inputs);
+                    array_unshift($temp2);
+                    permutations($temp, $temp2);    
                 }
             }
         }
-        return true;
     }
+    permutations(array(), $order);
+    //Yeahhh that's not happening
+    */
+
+    //Some values are repeated
+    //Can we group those somehow?
+    /*
+    $bucket = array();
+    foreach ($tickets as $ticket){
+        foreach ($ticket as $value){
+            if (key_exists($value, $bucket)){
+                $bucket[$value]=$bucket[$value]+1;
+            }
+            else{
+                $bucket[$value]=1;
+            }    
+        }
+    }
+    ksort($bucket);
+    var_dump($bucket);
+    */
 
     return;
-
 ?>
