@@ -171,51 +171,105 @@
         array_push($order, $x);
     }
 
-    function verify2($tickets, $order){
-        global $rules;
+    //Sleep deprived chat with someone
+    //Each value columnwise for the tickets should be unique?
+    //Verify which rule(s?) works for a column
+    //Go back to original idea of sort by column
 
-        $count=0;
+    /*
+    $failedcount = 0;
+    for ($y = 0; $y < count($rules); $y++){
 
-        //Tickets
-        foreach ($tickets as $ticket){
-            $x=0;
-
-            //Order
-            foreach ($order as $entry){
-
-                //Verify against rule
-                if (($ticket[$entry] >= $rules[$x]->lower1 && $ticket[$entry] <= $rules[$x]->upper1) === false){
-                    if (($ticket[$entry] >= $rules[$x]->lower2 && $ticket[$entry] <= $rules[$x]->upper2) === false){
-
-                        //New order?
-                        //Foreach working
-                            //try swap x
-                            //Recurse
-                        
-                        printf("ticket:" );
-                        var_dump($ticket);
-                        printf("index: ");
-                        var_dump($entry);
-                        printf("portion:");
-                        var_dump($ticket[$entry]);
-                        printf("bounds:" );
-                        var_dump($rules[$x]);
-                        //return false;
-                        $count++;
-                    }    
-                }
-                $x++;
+        $flag = false;
+        $failed = array();
+        for ($x = 0; $x < count($tickets); $x++){
+            if (!(  ($tickets[$x][$y] >= $rules[$y]->lower1 &&  $tickets[$x][$y] <= $rules[$y]->upper1) ||  ($tickets[$x][$y] >= $rules[$y]->lower2 && $tickets[$x][$y] <= $rules[$y]->upper2)  )){
+                $flag = true;
+                //php arrays: only string or ints can be keys
+                /*
+                array_push($failed, $failed[$tickets[$x]]);
+                $failed[$tickets[$x]]=$failed[$x][$y];
+                */
+                /*
+                $failed[$x] = $tickets[$x][$y];
             }
         }
-        //return true;
-        var_dump($count);
+
+        if ($flag === false){
+            printf("works\n");
+        }
+
+        else{
+            //printf("fails\n");
+            var_dump($failed);
+            var_dump($y);
+            var_dump($rules[$y]);
+            $failedcount++;
+        }
+    }*/
+
+    //Observations from above: Seems like it's only one ticket that will fail a rule
+    //10 rules fail
+    //Try swapping a rule with another and see the results
+    //10! is significantly smaller than 20! for brute forcing
+
+    /*
+    $order[0]=1;
+    $order[1]=0;
+    Fails 
+    */
+
+    //Shorter version
+    function verify3($order){
+        global $rules, $tickets;
+
+        foreach ($order as $y){
+            for ($x = 0; $x < count($tickets); $x++){
+                if (!(  ($tickets[$x][$y] >= $rules[$y]->lower1 &&  $tickets[$x][$y] <= $rules[$y]->upper1) ||  ($tickets[$x][$y] >= $rules[$y]->lower2 && $tickets[$x][$y] <= $rules[$y]->upper2)  )){
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
-    
-    verify2($tickets, $order);
-    //Notes:
-    //The regular order fails for 10 tickets
-    //Find where first error happens
-    //Swap with one that it works with fail
+
+    $reductions = array();
+
+    $failed = failedrules($order);
+
+    function failedrules($order){
+        global $rules, $tickets;
+        $failed = array();
+
+        foreach ($order as $y){
+            for ($x = 0; $x < count($tickets); $x++){
+                if (!(  ($tickets[$x][$y] >= $rules[$y]->lower1 &&  $tickets[$x][$y] <= $rules[$y]->upper1) ||  ($tickets[$x][$y] >= $rules[$y]->lower2 && $tickets[$x][$y] <= $rules[$y]->upper2)  )){
+                    $failed[count($failed)] = $y;
+                }
+            }
+        }
+        return $failed;
+    }
+
+    //Brute force the failed
+    function bff ($array, $carry){
+        if (count($carry) === 10){
+            if (verify3($array)===true){
+                return true;
+            }
+            else{return;}
+        }
+        else{
+            global $order;
+            $copy = deepcopy($order);
+
+            foreach ($array as $y){
+                array_push($carry, $y);
+                bff($array, $carry);
+            }
+        }
+    }
 
     return;
 ?>
