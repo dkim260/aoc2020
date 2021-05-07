@@ -321,9 +321,11 @@
     heapsalgo($length-1, $failed);
     //Permutations here don't work.
 
+    //Some tickets have duplicate entries
+
     //Reddit thread says greedy, rule-index sieves
 
-    
+    //Each entry, write down which rules work for it
 
     return;
 ?>
