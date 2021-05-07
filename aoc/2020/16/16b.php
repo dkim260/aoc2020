@@ -211,7 +211,7 @@
     //Observations from above: Seems like it's only one ticket that will fail a rule
     //10 rules fail
     //Try swapping a rule with another and see the results
-    //10! is significantly smaller than 20! for brute forcing
+    //10! is significantly smaller than 20! for brute forcing at least for testing
 
     /*
     $order[0]=1;
@@ -252,24 +252,78 @@
         return $failed;
     }
 
+    function swapAndVerify ($holder){
+        //swap order array with the new parts
+        global $failed, $order;
+        for ($x = 0; $x < count($holder); $x++){
+            $order [$failed[$x]] = $holder[$x];
+        }
+        if (verify3($order)===true){
+            var_dump($order);
+            return true;
+        }
+        else{return;}
+    }
+
+    /*
+    $counter=0;
+
     //Brute force the failed
-    function bff ($array, $carry){
-        if (count($carry) === 10){
-            if (verify3($array)===true){
-                return true;
-            }
-            else{return;}
+    //10P10 is ~3million but the last time I tried this returns 600
+    //Need to remember backtracking
+    function bff ($holder, $carry){
+        if (count($holder) === 10){
+            swapAndVerify($holder);
+            return;
         }
         else{
-            global $order;
-            $copy = deepcopy($order);
-
-            foreach ($array as $y){
-                array_push($carry, $y);
-                bff($array, $carry);
+            foreach ($carry as $y){
+                array_push($holder, $y);
+                $filter = array_filter ($carry, fn ($x) => $x !== $y);
+                bff($holder, $filter);
+                global $counter;
+                $counter++;
             }
         }
     }
+
+    bff(array(), $failed);
+    //Brute forcing ended up with 7million in the counter and none of them made the rules work.
+    */
+
+    //Threw in the towel
+    //Some googling and I'm getting Heap's algorithm: https://en.wikipedia.org/wiki/Heap%27s_algorithm
+
+    $length = count($failed);
+    function heapsalgo ($k, $array){
+        if ($k===1){
+            swapAndVerify($array);
+        }
+        else{
+            heapsalgo ($k-1, $array);
+
+            for ($x = 0; $x< $k-1; $x++){
+                if ($k % 2 === 0){
+                    $temp = $array[$x];
+                    $array[$x]=$array[$k-1];
+                    $array[$k-1]=$temp;
+                }
+                else{
+                    $temp = $array[0];
+                    $array[0]=$array[$k-1];
+                    $array[$k-1]=$temp;
+                }
+
+                heapsalgo ($k-1, $array);
+            }
+        }
+    }
+    heapsalgo($length-1, $failed);
+    //Permutations here don't work.
+
+    //Reddit thread says greedy, rule-index sieves
+
+    
 
     return;
 ?>
