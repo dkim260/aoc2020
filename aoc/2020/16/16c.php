@@ -225,8 +225,44 @@
 
     //Based on the visualization I saw, it kind of looked like it was reducing entries and making some sort of staircase
 
-    //For each rule, swap order until 0 incompatible?
+    //on every ticket there is at most one entry-rule pair that doesn't work
+    //Stack all the rules that don't work for each ticket column
 
+    $fails = array();
+    for ($x = 0; $x  < 20; $x++){
+        $fails[$x]=array();
+    }
+
+    //x = ticket, y = entry, z = rules satisfied
+    for ($x = 0; $x<count($satisfies); $x++){
+        for ($y = 0; $y<20; $y++){
+            for ($z = 0; $z< 20; $z++){
+                if (count($satisfies[$x][$y][$z])===0){
+                    array_push($fails[$y], $z);
+                }
+            }
+        }
+    }
+
+    //Swap rules by starting with the most incompatible
+    for ($x = 0; $x < count($fails); $x++){
+        asort($fails[$x]);
+    }
+
+    for ($x = 19; $x>0; $x--){
+        foreach ($fails as $fail){
+            if (count($fail)===$x){
+                $z=0;
+                foreach ($fail as $count){
+                    if ($count!=$z){
+                        printf("");
+                        //Swap and redo the process
+                    }
+                    $z++;
+                }
+            }
+        }
+    }
 
     return;
 ?>
