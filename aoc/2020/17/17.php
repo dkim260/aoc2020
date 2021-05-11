@@ -28,6 +28,7 @@
     $parse="";
 
     //3d array: if key in array is null, it's inactive. otherwise entry is x or .
+    //Error: This is a 4d array, whoops
     $y=0;
     $z=0;
     $points = array();
@@ -79,7 +80,7 @@
                         }
 
                         if ($flag===true){
-                            $array[$neighbour[0]][$neighbour[1]][$neighbour[2]]=".";
+                            array_push($array[$neighbour[0]][$neighbour[1]][$neighbour[2]],".");
                         }
                         else if ($array[$neighbour[0]][$neighbour[1]][$neighbour[2]] === "x"){
                             $counter++;
@@ -87,10 +88,10 @@
                     }
 
                     if ($array[$x][$y][$z]==="x" && !($counter == 2 || $counter == 3)){
-                        $array[$x][$y][$z]=".";
+                        $array[$x][$y][$z][0]=".";
                     }
                     else if ($array[$x][$y][$z] === "." && $counter ===3 ){
-                        $array[$x][$y][$z]="x";
+                        $array[$x][$y][$z][0]="x";
                     }
 
                 }
