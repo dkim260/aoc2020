@@ -206,6 +206,7 @@
             }
         }
     }
+
     //x = ticket, y = entry, z = rules satisfied
     for ($x = 0; $x<count($satisfies); $x++){
         for ($y = 0; $y<20; $y++){
@@ -244,25 +245,85 @@
         }
     }
 
-    //Swap rules by starting with the most incompatible
     for ($x = 0; $x < count($fails); $x++){
         asort($fails[$x]);
     }
 
-    for ($x = 19; $x>0; $x--){
-        foreach ($fails as $fail){
-            if (count($fail)===$x){
+    //Need to rewrite this as a procedure
+
+    function satisfies ($order){
+        global $tickets, $rules;
+        $satisfies = array();
+        for ($x = 0; $x<count($tickets); $x++){
+            $satisfies[$x] = array();
+            for ($y = 0; $y< 20; $y++){
+                $satisfies[$x][$y] = array();
                 $z=0;
-                foreach ($fail as $count){
-                    if ($count!=$z){
-                        printf("");
-                        //Swap and redo the process
+                foreach ($order as $orderrule){
+                    $satisfies[$x][$y][$z] = array();
+                    if ($tickets[$x][$y] >= $rules[$orderrule]->lower1 && $tickets[$x][$y]<= $rules[$orderrule]->upper1){
+                        array_push($satisfies[$x][$y][$z],"a");
+                    }
+                    if ($tickets[$x][$y] >= $rules[$orderrule]->lower2 && $tickets[$x][$y]<= $rules[$orderrule]->upper2){
+                        array_push($satisfies[$x][$y][$z],"b");
                     }
                     $z++;
                 }
             }
         }
+        return $satisfies;    
     }
+
+    $test = satisfies($order);
+    
+    function fails ($satisfies){
+        $fails = array();
+        for ($x = 0; $x  < 20; $x++){
+            $fails[$x]=array();
+        }
+    
+        //x = ticket, y = entry, z = rules satisfied
+        for ($x = 0; $x<count($satisfies); $x++){
+            for ($y = 0; $y<20; $y++){
+                for ($z = 0; $z< 20; $z++){
+                    if (count($satisfies[$x][$y][$z])===0){
+                        array_push($fails[$y], $z);
+                    }
+                }
+            }
+        }
+        for ($x = 0; $x < count($fails); $x++){
+            asort($fails[$x]);
+        }    
+
+        return $fails;
+    }
+
+    $test2 = fails($test);
+
+    //modify orders
+    for ($x = 19; $x>0; $x--){
+        foreach ($test2 as $entry){
+            if (count($entry)==$x){
+                $y=0;
+                foreach ($entry as $var){
+                    if ($var != $y){    
+                        $temp = $order[$y];
+                        $key = array_search($entry, $test2);
+                        $order[$key] = $temp;
+                        $order[$temp] = $key;
+                    }
+                    $y++;
+                }
+            }
+        }
+    }
+
+    
+
+    //set it to satisfies
+    //check where it fails
+    //repeat
 
     return;
 ?>
