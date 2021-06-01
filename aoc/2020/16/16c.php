@@ -222,7 +222,7 @@
     //it has an entry of 0, that was an oversight
     //made adjustments on line 160
 
-    //Your ticket (#0) has the least incompatibilities on its own
+    //Your ticket (#0) has the least incompatibilities on its own (it works with all tickets)
 
     //Based on the visualization I saw, it kind of looked like it was reducing entries and making some sort of staircase
 
@@ -301,29 +301,45 @@
 
     $test2 = fails($test);
 
-    //modify orders
-    for ($x = 19; $x>0; $x--){
-        foreach ($test2 as $entry){
-            if (count($entry)==$x){
-                $y=0;
-                foreach ($entry as $var){
-                    if ($var != $y){    
-                        $temp = $order[$y];
-                        $key = array_search($entry, $test2);
-                        $order[$key] = $temp;
-                        $order[$temp] = $key;
-                    }
-                    $y++;
-                }
+    //Find max
+    function findMax($array){
+        $min = 0;
+        $index = 0;
+        foreach ($array as $entry){
+            if (count($entry)>=$min){
+                $min = count($entry);
+                $index = array_search($entry, $array);
             }
         }
+        return $index;
     }
 
-    
+    //Find to swap with
+    function findSwap ($array){
+        $find = array();
+        for ($x = 0; $x<20; $x++){
+            array_push($find, $x);
+        }
 
-    //set it to satisfies
-    //check where it fails
-    //repeat
+        foreach ($array as $entry){
+            unset($find[$entry]);
+        }
+        return $find;
+    }
+
+    $test3 = findMax($test2);
+    $test4 = findSwap ($test2);
+
+    /*
+    //Modify orders
+    $temp = $order[$y];
+    $key = array_search($entry, $test2);
+    $order[$key] = $temp;
+    $order[$temp] = $key;
+    $test = satisfies($order);
+    $test2 = fails($test);
+    */
+
 
     return;
 ?>
